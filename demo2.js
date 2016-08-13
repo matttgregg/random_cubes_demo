@@ -106,6 +106,8 @@ Cloud = function(){
 	// Create an empty container that will hold the different parts of the cloud
 	this.mesh = new THREE.Object3D();
 
+	this.cycleSpeed = 0.5+Math.random();
+
 	// create a cube geometry;
 	// this shape will be duplicated to create the cloud
 	var geom = new THREE.BoxGeometry(20,20,20);
@@ -170,15 +172,14 @@ var sky;
 
 function MoveClouds(delta)
 {
-  console.log(delta);
-  sky.mesh.position.z =  (delta*100);
+  //sky.mesh.position.z =  Math.sin(delta)*100;
   for(var i=0; i<sky.nClouds; i++){
 
     // Faster clouds jump further.
 		var rjump = 0.01*sky.speeds[i];
 
     var cloud = sky.clouds[i]
-    cloud.mesh.position.x += 0.25*i*(2*(delta + rjump))
+    cloud.mesh.position.x += 0.25*i*(2*(Math.cos(cloud.cycleSpeed*10*rjump*delta)) + rjump)
     if (Math.abs(cloud.mesh.position.x) > 2000) {
       cloud.mesh.position.x = 0;
     }
@@ -232,7 +233,7 @@ function loop(){
 	sky.mesh.rotation.z += .015;
 	//sky.mesh.rotation.z += .01;
 
-  MoveClouds(Math.sin((Date.now() - startTime)/200));
+  MoveClouds((Date.now() - startTime)/200);
 	// render the scene
 	renderer.render(scene, camera);
 
